@@ -10,11 +10,16 @@ export class ListComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: "open"});
+
+        this.buttonActions = Object.freeze({
+            generate: this.generate.bind(this),
+            display: this.display.bind(this),
+            clear: this.clear.bind(this)
+        });
     }
 
     async connectedCallback() {
         this.shadowRoot.innerHTML = await fetch(this.html).then(result => result.text());
-        console.log("List connected");
 
         this.clickHandler = this.click.bind(this);
         const buttons = this.shadowRoot.querySelectorAll("#footer button");
@@ -40,50 +45,39 @@ export class ListComponent extends HTMLElement {
         for (let i = 0; i < numberOfRecords; i++) {
             records.push({id: i, name: `Record ${i}`});
         }
-        console.log(records);
 
         return records;
     }
 
-    /**
-     * @method displayList - will display the list of records based on the name property of the list of records
-     * @param records {[object]}
-     * @return {Promise<void>}
-     */
-    async displayList(records) {
+    async generate() {
+        this.records = await this.createRecords(21);
+    }
+
+    async display(records) {
         const list = this.shadowRoot.querySelector("#list-items");
         const fragment = document.createDocumentFragment();
 
-        for(let i = 0; i < records.length; i++) {
+        for(let i = 0; i < this.records.length; i++) {
             const item = document.createElement("li");
-            item.textContent = records[i].name;
+            item.textContent = this.records[i].name;
             fragment.appendChild(item);
         }
 
         list.appendChild(fragment);
     }
 
+    async clear() {
+        this.records = [];
+        const list = this.shadowRoot.querySelector("#list-items");
+        list.innerHTML = "";
+    }
+
     async click(event) {
-        console.log("click");
 
-        if (event.target.id === "generate") {
-            this.records = await this.createRecords(21);
-            alert(`Generated ${this.records.length} records`);
-        }
+        const buttonId = event.target.id;
 
-        if (event.target.id === "display") {
-            if (this.records.length === 0) {
-                alert("No records to display");
-                return;
-            }
-            await this.displayList(this.records);
-        }
-
-        if (event.target.id === "clear") {
-            this.records = [];
-            const list = this.shadowRoot.querySelector("#list-items");
-            alert("List cleared");
-            list.innerHTML = "";
+        if (this.buttonActions[buttonId]) {
+            await this.buttonActions[buttonId]();
         }
     }
 
