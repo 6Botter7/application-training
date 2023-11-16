@@ -1,0 +1,75 @@
+#device {
+    background: #2F3545;
+    height: 100vh;
+    width: 100vw;
+    color: whitesmoke;
+}
+
+#screen {
+    display: flex;
+    height: 600px;
+    width: 350px;
+    border: 3px silver groove;
+    position: relative;
+    left: 35%;
+    top: 10%;
+    background: linear-gradient(70deg, black, transparent);
+}
+
+#list-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Comic Sans MS";
+    font-size: 40px;
+    position: sticky;
+    top: 0; /* Add a background color for visibility */
+    z-index: 1; /* Add z-index to ensure it's above other content */
+}
+
+li {
+    background: transparent;
+    color: whitesmoke;
+    padding: 5px;
+    width: 100%;
+}
+
+#list {
+    display: block;
+    height: 560px;
+    width: inherit;
+    border: 2px solid silver;
+    overflow: scroll;
+    position: relative;
+}
+
+#footer {
+    display: flex;
+    align-self: end;
+    position: absolute;
+    margin-left: 45px;
+}
+
+#footer button {
+    border: none;
+    font-weight: bolder;
+    font-family: "Comic Sans MS";
+    font-size: 20px;
+    margin-right: 10px;
+    background: transparent;
+    cursor: pointer;
+    color: whitesmoke;
+}
+
+#screen {
+    overflow: hidden; /* Hide the scrollbar by default */
+}
+
+#list {
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+}
+
+#list:hover {
+    overflow-y: scroll;
+}
